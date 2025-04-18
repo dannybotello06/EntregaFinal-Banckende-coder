@@ -35,6 +35,26 @@ const initializePassport = () => {
         }
     ));
 
+    passport.use('login', new localStrategy(
+        { passReqToCallback: true, usernameField: 'email' }, async (req, username, password, done) => {
+            try {
+                const user = await userModel.findOne({ email: username });
+                console.log("Usuario encontrado para login:");
+                console.log(user);
+                if (!user) {
+                    console.warn("User doesn't exists with username: " + username);
+                    return done(null, false);
+                }
+                if (!isValidPassword(user, password)) {
+                    console.warn("Invalid credentials for user: " + username);
+                    return done(null, false);
+                }
+                return done(null, user);
+            } catch (error) {
+                return done(error);
+            }
+        })
+    );
 
 
     passport.use('register', new localStrategy(

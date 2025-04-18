@@ -1,18 +1,9 @@
-export default  class Middlewares {
 
- 
-
-    static authorization(role) {
-        return async(request, response, next) => {
-            if(!request.user) {
-                return response.status(401).json({Status: "Error", Message: "Unauthorized"});
-            }
-
-            if(request.user.role != role) {
-                return response.status(403).json({Status: "Error", Message: "No Permissions"});
-            }
-
-            next();
+export const authorize = (roles) => {
+    return (req, res, next) => {
+        if (!roles.includes(req.user.role)) {
+            return res.status(403).send("Acceso denegado");
         }
-    }
-}
+        next();
+    };
+};

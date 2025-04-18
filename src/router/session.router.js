@@ -71,8 +71,10 @@ router.post("/login", async (req, res) => {
     router.get("/current",
         passportCall('jwt'),
         (req, res) => {
+
+            const userDTO = new UserDTO(req.user);
             res.render("profile", {
-                user: req.user
+                user: userDTO
             });
         });
 
